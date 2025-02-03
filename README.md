@@ -30,38 +30,60 @@ An on-demand demo environment running on Google Kubernetes Engine (GKE) that sho
 ## Project Structure
 
 ```
-.
 ├── README.md
-├── bin/
-│   ├── build_conductor.sh    # Conductor image build script
-│   ├── deploy-ollama.sh      # Ollama deployment script
-│   ├── deploy-openwebui.sh   # Open WebUI deployment script
-│   ├── gke-deploy.sh         # GKE cluster creation script
-│   └── gke-teardown.sh       # Cleanup script
-├── docs/
-│   ├── arch.md              # Architecture documentation
-│   ├── envoy-arch.md        # Envoy configuration details
-│   ├── notes.md             # Additional context
-│   └── test.md             # Testing procedures
-├── env.sh                   # Environment configuration
-└── k8s/
-    ├── conductor/          # Demo application
-    │   ├── Dockerfile
-    │   ├── app.py
-    │   └── requirements.txt
-    ├── ollama/            # Ollama K8s manifests
-    │   ├── cert-ollama.yml
-    │   ├── deployment-ollama.yml
-    │   ├── ingress-ollama.yml
-    │   ├── namespace-ollama.yaml
-    │   ├── service-ollama.yml
-    │   └── storage-ollama.yml
-    └── openwebui/         # Open WebUI K8s manifests
-        ├── cert-owui.yml
-        ├── deployment-owui.yml
-        ├── ingress-owui.yml
-        ├── namespace-owui.yml
-        └── service-owui.yml
+├── bin
+│   ├── build_conductor.sh
+│   ├── deploy-ollama.sh
+│   ├── deploy-openwebui.sh
+│   ├── gke-deploy.sh
+│   ├── gke-teardown.sh
+│   └── gpu.sh
+├── docs
+│   ├── arch.md
+│   ├── envoy-arch.md
+│   ├── notes.md
+├── k8s
+│   ├── conductor
+│   │   ├── Dockerfile
+│   │   ├── app.py
+│   │   └── requirements.txt
+│   ├── envoy-ai-gateway
+│   │   ├── config
+│   │   │   ├── base
+│   │   │   │   └── basic.yaml
+│   │   │   └── ollama
+│   │   │       ├── backend.yml
+│   │   │       └── secret.yml
+│   │   ├── delete_all.sh
+│   │   ├── install
+│   │   │   └── install.sh
+│   │   ├── routes
+│   │   │   └── routes.yml
+│   │   └── scripts
+│   │       ├── secret.sh
+│   │       ├── test-oai.sh
+│   │       └── test-ollama.sh
+│   ├── ollama
+│   │   ├── backend-config-ollama.yaml
+│   │   ├── cert-ollama.yaml
+│   │   ├── deployment-ollama.yaml
+│   │   ├── ingress-ollama.yaml
+│   │   ├── namespace-ollama.yaml
+│   │   ├── service-ollama.yaml
+│   │   ├── storage-ollama.yaml
+│   │   └── tests
+│   │       ├── ollama-chat.sh
+│   │       ├── ollama-emb.sh
+│   │       └── ollama-gen.sh
+│   └── openwebui
+│       ├── backend-config-owui.yml
+│       ├── cert-owui.yml
+│       ├── deployment-owui.yml
+│       ├── ingress-owui.yml
+│       ├── namespace-owui.yml
+│       ├── service-owui.yml
+│       └── vol-owui.yml
+
 ```
 
 ## System Architecture
