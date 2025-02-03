@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ollama
+  namespace: ollama
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "ollama-ip"
+    networking.gke.io/managed-certificates: "ollama-cert"
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  rules:
+    - host: ollama.pool-side.cc
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ollama
+                port:
+                  number: 80
+

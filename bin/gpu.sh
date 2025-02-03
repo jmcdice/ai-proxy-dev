@@ -1,0 +1,11 @@
+gcloud container node-pools create gpu-pool \
+    --cluster="$CLUSTER_NAME" \
+    --zone="$ZONE" \
+    --machine-type="g2-standard-4" \
+    --accelerator="type=nvidia-l4,count=1" \
+    --num-nodes=1 \
+    --enable-autoupgrade \
+    --enable-autorepair \
+    --node-taints="nvidia.com/gpu=present:NoSchedule" \
+    --image-type="COS_CONTAINERD" \
+    --scopes="https://www.googleapis.com/auth/cloud-platform"

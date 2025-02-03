@@ -1,0 +1,9 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ollama-backend-config
+  namespace: ollama
+spec:
+  timeoutSec: 300
+  connectionDraining:
+    drainingTimeoutSec: 300

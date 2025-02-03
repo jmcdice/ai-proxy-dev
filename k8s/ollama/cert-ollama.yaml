@@ -1,0 +1,9 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ollama-cert
+  namespace: ollama
+spec:
+  domains:
+    - ollama.pool-side.cc
+

@@ -1,0 +1,9 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: openwebui-cert
+  namespace: openwebui
+spec:
+  domains:
+    - openwebui.pool-side.cc
+
