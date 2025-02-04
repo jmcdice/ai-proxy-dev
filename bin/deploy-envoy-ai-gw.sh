@@ -69,24 +69,60 @@ wait_for_basic_gateway() {
     --for=condition=Ready
 }
 
+# Deploy Ollama overlay configuration
+deploy_ollama_overlay() {
+  echo "Deploying Ollama backend configuration..."
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  K8S_DIR="${SCRIPT_DIR}/../k8s"
+  
+  # Apply Ollama backend configuration
+  kubectl apply -f "${K8S_DIR}/envoy-ai-gateway/config/ollama/backend.yaml"
+  kubectl apply -f "${K8S_DIR}/envoy-ai-gateway/config/ollama/secret.yaml"
+  
+  echo "Applying updated routes..."
+  kubectl apply -f "${K8S_DIR}/envoy-ai-gateway/routes/routes.yaml"
+  
+  echo "Waiting for route configuration to be applied..."
+  sleep 5
+}
+
+# Verify the deployment
+verify_deployment() {
+  echo "Verifying deployment..."
+  
+  # Check gateway components
+  echo "Checking gateway components..."
+  kubectl get aigatewayroute,aiservicebackend,backend,backendtlspolicy -n default
+  
+  # Check if Ollama backend is properly configured
+  echo "Checking Ollama backend..."
+  kubectl get backend envoy-ai-gateway-basic-ollama -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+}
+
 main() {
-  # Deploy the gateway components
-  # deploy_envoy_gateway
-  # deploy_ai_gateway
+  echo "Starting Envoy AI Gateway deployment..."
+  
+  # Deploy core components
+  deploy_envoy_gateway
+  deploy_ai_gateway
   configure_gateway
   restart_gateway
   wait_for_gateway
   echo "Envoy Gateway and AI Gateway deployment complete!"
   
-  # Create the OpenAI secret from env var
-  create_openai_secret
-  
-  # Deploy the basic demo setup and wait for it to be ready
+  # Deploy basic setup
   deploy_basic_setup
   wait_for_basic_gateway
   
-  echo "Basic AI Gateway setup deployed and ready!"
+  # Deploy Ollama overlay
+  deploy_ollama_overlay
+  
+  # Verify deployment
+  verify_deployment
+  
+  echo "Deployment complete! You can now test the gateway with:"
+  echo "  ./bin/test-oai.sh     # Test OpenAI backend"
+  echo "  ./bin/test-ollama.sh  # Test Ollama backend"
 }
 
 main
-

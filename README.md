@@ -30,60 +30,61 @@ An on-demand demo environment running on Google Kubernetes Engine (GKE) that sho
 ## Project Structure
 
 ```
-├── README.md
-├── bin
-│   ├── build_conductor.sh
-│   ├── deploy-ollama.sh
-│   ├── deploy-openwebui.sh
-│   ├── gke-deploy.sh
-│   ├── gke-teardown.sh
-│   └── gpu.sh
-├── docs
-│   ├── arch.md
-│   ├── envoy-arch.md
-│   ├── notes.md
-├── k8s
-│   ├── conductor
-│   │   ├── Dockerfile
-│   │   ├── app.py
-│   │   └── requirements.txt
-│   ├── envoy-ai-gateway
-│   │   ├── config
-│   │   │   ├── base
-│   │   │   │   └── basic.yaml
-│   │   │   └── ollama
-│   │   │       ├── backend.yml
-│   │   │       └── secret.yml
-│   │   ├── delete_all.sh
-│   │   ├── install
-│   │   │   └── install.sh
-│   │   ├── routes
-│   │   │   └── routes.yml
-│   │   └── scripts
-│   │       ├── secret.sh
-│   │       ├── test-oai.sh
-│   │       └── test-ollama.sh
-│   ├── ollama
-│   │   ├── backend-config-ollama.yaml
-│   │   ├── cert-ollama.yaml
-│   │   ├── deployment-ollama.yaml
-│   │   ├── ingress-ollama.yaml
-│   │   ├── namespace-ollama.yaml
-│   │   ├── service-ollama.yaml
-│   │   ├── storage-ollama.yaml
-│   │   └── tests
-│   │       ├── ollama-chat.sh
-│   │       ├── ollama-emb.sh
-│   │       └── ollama-gen.sh
-│   └── openwebui
-│       ├── backend-config-owui.yml
-│       ├── cert-owui.yml
-│       ├── deployment-owui.yml
-│       ├── ingress-owui.yml
-│       ├── namespace-owui.yml
-│       ├── service-owui.yml
-│       └── vol-owui.yml
-
+  ├── README.md
+  ├── bin
+  │   ├── build_conductor.sh
+  │   ├── deploy-envoy-ai-gw.sh
+  │   ├── deploy-ollama.sh
+  │   ├── deploy-openwebui.sh
+  │   ├── gke-deploy.sh
+  │   ├── gke-teardown.sh
+  │   ├── gpu.sh
+  │   ├── test-oai.sh
+  │   └── test-ollama.sh
+  ├── docs
+  │   ├── add_ollama_model.md
+  │   ├── arch.md
+  │   ├── envoy-arch.md
+  │   ├── notes.md
+  │   └── test.md
+  ├── k8s
+  │   ├── conductor
+  │   │   ├── Dockerfile
+  │   │   ├── app.py
+  │   │   └── requirements.txt
+  │   ├── envoy-ai-gateway
+  │   │   ├── config
+  │   │   │   ├── base
+  │   │   │   │   └── basic.yaml
+  │   │   │   └── ollama
+  │   │   │       ├── backend.yml
+  │   │   │       └── secret.yml
+  │   │   ├── delete_all.sh
+  │   │   ├── routes
+  │   │   │   └── routes.yml
+  │   │   └── scripts
+  │   │       └── secret.sh
+  │   ├── ollama
+  │   │   ├── backend-config-ollama.yaml
+  │   │   ├── cert-ollama.yaml
+  │   │   ├── deployment-ollama.yaml
+  │   │   ├── ingress-ollama.yaml
+  │   │   ├── namespace-ollama.yaml
+  │   │   ├── service-ollama.yaml
+  │   │   ├── storage-ollama.yaml
+  │   │   └── tests
+  │   │       ├── ollama-chat.sh
+  │   │       ├── ollama-emb.sh
+  │   │       └── ollama-gen.sh
+  │   └── openwebui
+  │       ├── backend-config-owui.yml
+  │       ├── cert-owui.yml
+  │       ├── deployment-owui.yml
+  │       ├── ingress-owui.yml
+  │       ├── namespace-owui.yml
+  │       ├── service-owui.yml
+  │       └── vol-owui.yml
+  └── 
 ```
 
 ## System Architecture
@@ -118,16 +119,16 @@ An on-demand demo environment running on Google Kubernetes Engine (GKE) that sho
 ## Getting Started
 
 1. **Environment Setup**
-   ```bash
+```bash
    # Edit environment configuration
    vim env.sh
 
    # Deploy GKE cluster
    ./bin/gke-deploy.sh
-   ```
+```
 
 2. **Service Deployment**
-   ```bash
+```bash
    # Deploy AI services
    ./bin/deploy-ollama.sh
    ./bin/deploy-openwebui.sh
@@ -135,6 +136,11 @@ An on-demand demo environment running on Google Kubernetes Engine (GKE) that sho
    # Build and deploy Conductor (todo)
    ./bin/build_conductor.sh
 
+   # Deploy gateway with Ollama support
+   ./bin/deploy-envoy-ai-gw.sh
+```
+
+### Architecture Diagram
 
 ```console
 ├── AI Gateway Infrastructure
@@ -175,12 +181,12 @@ Ingress/Gateway
      │
      ├─────────────────┐
      ▼                 ▼
-OpenWebUI         AI Gateway
+OpenWebUI         Envoy AI Gateway
      │                 │
      │            Model Routes
      │            ┌────┴────┐
      │            ▼         ▼
-     │         OpenAI     Ollama
+     │         OpenAI     Ollama (local)
      │                     ▲
      └─────────────────────┘
 ```
@@ -203,4 +209,3 @@ This project is under active development. Future updates will include:
 - Enhanced Envoy gateway deployment
 - Additional testing scenarios
 - Performance optimization guides
-
